@@ -6,7 +6,6 @@ import (
 	"api/models"
 	"math/rand"
 
-	// "time"
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
@@ -36,7 +35,6 @@ func CreateAccount(c *fiber.Ctx) error {
 
 	// client validation
 	var client models.Client
-
 	resultClient := db.First(&client, "uuid = ?", accountInput.ClientUUID)
 	if err := resultClient.Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -54,7 +52,6 @@ func CreateAccount(c *fiber.Ctx) error {
 	// Currency validation
 	var currency models.Currency
 	resultCurrency := db.First(&currency, "uuid = ?", accountInput.CurrencyUUID)
-	// validar q la consulta retorne datos, de lo contrario retornar un error
 	if err := resultCurrency.Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return c.Status(fiber.StatusNotFound).JSON(
@@ -121,7 +118,6 @@ func ModifyLimitsAccount(c *fiber.Ctx) error {
 	var account models.Account
 
 	// Validating input
-
 	if err := c.BodyParser(newAccountValues); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(
 			fiber.Map{

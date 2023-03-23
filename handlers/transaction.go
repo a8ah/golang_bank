@@ -5,8 +5,6 @@ import (
 	"api/dto"
 	"api/models"
 
-	// "time"
-
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -68,7 +66,6 @@ func TransferFounds(c *fiber.Ctx) error {
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(
 			fiber.Map{
-				// "message": err.Error(),
 				"message": "origin_accounts format not alowed. Please  check",
 			})
 	}
@@ -83,7 +80,6 @@ func TransferFounds(c *fiber.Ctx) error {
 
 	// originAccount validation
 	var originAccount models.Account
-
 	resultOriginAccount := db.First(&originAccount, "uuid = ?", originAccountUUID)
 	if err := resultOriginAccount.Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -100,7 +96,6 @@ func TransferFounds(c *fiber.Ctx) error {
 
 	// destinationAccount validation
 	var destinationAccount models.Account
-
 	resultDestinationAccount := db.First(&destinationAccount, "uuid = ?", destinationAccountUUID)
 	if err := resultDestinationAccount.Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -183,9 +178,7 @@ func TransferFounds(c *fiber.Ctx) error {
 func UpdateBalance(initialValue float32, amount float32, credit bool) float32 {
 	if credit {
 		return initialValue + amount
-		// return 0
 	} else {
 		return initialValue - amount
-		// return 1
 	}
 }
