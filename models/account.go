@@ -1,20 +1,13 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
+import "github.com/google/uuid"
 
 // Client structure
 type Account struct {
-	gorm.Model
-	ClientID uint
-	Number   int     `gorm:"not null" json:"number"`
-	Balance  float32 `gorm:"not null" json:"balance"`
-	Limit    int     `gorm:"not null" json:"limit" default: 10000`
+	BaseModel  BaseModel `gorm:"embedded"`
+	Number     int       `gorm:"not null" json:"number"`
+	Balance    float32   `gorm:"not null" json:"balance"`
+	Limit      int       `gorm:"not null; default: 10000" json:"limit"`
+	ClientUUID uuid.UUID `gorm:"type:uuid REFERENCES clients(uuid)" json:"client_uuid" `
+	// Client     Client    `gorm:"ForeignKey:ClientUUID;AssociationForeignKey:UUID`
 }
-
-// // Updating data in same transaction
-// func (u *Account) AfterUpdate(tx *gorm.DB) (err error) {
-// 	u.UpdatedAt = time.Now()
-// 	return
-// }

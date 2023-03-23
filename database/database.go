@@ -2,17 +2,15 @@ package database
 
 import (
 	"api/utils"
+	"fmt"
 	"log"
 	"os"
-	"fmt"
-	// "api/models"
 
-	"gorm.io/gorm"
 	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	
 )
 
 type Dbinstance struct {
