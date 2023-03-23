@@ -47,6 +47,7 @@ func ConnectDb() {
 	// db.AutoMigrate(&models.Currency{})
 	// db.AutoMigrate(&models.Client{})
 	// db.AutoMigrate(&models.Account{})
+	// db.AutoMigrate(&models.Transaction{})
 
 	DB = Dbinstance{
 		Db: db,
