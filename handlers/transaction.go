@@ -149,10 +149,15 @@ func TransferFounds(c *fiber.Ctx) error {
 	}
 
 	transaction := new(models.Transaction)
-	transaction.OriginAccount = originAccountUUID
-	transaction.DestinationAccount = destinationAccountUUID
-	transaction.Amount = transactionInput.Amount
-	transaction.CurrencyUUID = currencyUUID
+	transaction.New_origin_account(originAccountUUID)
+	transaction.New_destination_account(destinationAccountUUID)
+	transaction.New_amount(transactionInput.Amount)
+	transaction.New_currency(currencyUUID)
+
+	// transaction.OriginAccount = originAccountUUID
+	// transaction.DestinationAccount = destinationAccountUUID
+	// transaction.Amount = transactionInput.Amount
+	// transaction.CurrencyUUID = currencyUUID
 
 	db.Create(&transaction)
 
