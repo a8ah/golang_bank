@@ -44,6 +44,7 @@ func ConnectDb() {
 	db.Logger = logger.Default.LogMode(logger.Info)
 
 	// log.Println("running migrations")
+	// db.AutoMigrate(&models.Currency{})
 	// db.AutoMigrate(&models.Client{})
 	// db.AutoMigrate(&models.Account{})
 
