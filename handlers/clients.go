@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"api/database"
+	"api/dto"
 	"api/models"
 	"time"
 
@@ -11,14 +12,16 @@ import (
 
 func GetAllClients(c *fiber.Ctx) error {
 	clients := []models.Client{}
+	db := database.DB.Db
 
-	database.DB.Db.Find(&clients)
+	db.Find(&clients)
 
 	return c.Status(200).JSON(clients)
 }
 
 func CreateClients(c *fiber.Ctx) error {
 	client := new(models.Client)
+	db := database.DB.Db
 	if err := c.BodyParser(client); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(
 			fiber.Map{
@@ -26,7 +29,7 @@ func CreateClients(c *fiber.Ctx) error {
 			})
 	}
 
-	database.DB.Db.Create(&client)
+	db.Create(&client)
 
 	return c.Status(200).JSON(client)
 }
@@ -47,7 +50,7 @@ func ModifyClients(c *fiber.Ctx) error {
 	id := c.Params("id")
 
 	// Validating input
-	clientInput := new(models.ClientDTO)
+	clientInput := new(dto.ClientDTO)
 	if err := c.BodyParser(clientInput); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(
 			fiber.Map{

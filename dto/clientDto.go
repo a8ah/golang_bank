@@ -1,4 +1,4 @@
-package models
+package dto
 
 // Client structure
 type ClientDTO struct {
