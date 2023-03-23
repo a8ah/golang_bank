@@ -22,4 +22,19 @@ func SetUpRouters(app *fiber.App) {
 	app.Post("/client", handlers.CreateClients)
 	app.Put("/client/:id", handlers.ModifyClients)
 
+	// Account endpoints
+	app.Get("/account", handlers.GetAllAccounts)
+	app.Get("/account/:id", handlers.GetAccount)
+	app.Post("/account", handlers.CreateAccount)
+	app.Put("/account/:id/limits", handlers.ModifyLimitsAccount)
+	app.Put("/account/:id/secnumb", handlers.ModifySecNumberAccount)
+	app.Post("/account/:id/deposit", handlers.DepositAccount)
+	app.Post("/account/:id/withdrawals", handlers.WithdrawalsAccount)
+
+	// Transacction
+	app.Post("/transfer", handlers.TransferFounds)
+	app.Get("/transfer", handlers.GetAllTransfer)
+	app.Get("/transfer/:id", handlers.GetTransfer)
+	app.Get("/transfer/account/:id", handlers.GetTransferByAccountId)
+
 }
