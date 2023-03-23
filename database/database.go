@@ -17,8 +17,12 @@ type Dbinstance struct {
 	Db *gorm.DB
 }
 
+// Could you propose a better way to share this object?
 var DB Dbinstance
 
+// To make an entire app fail from an internal package is not a good practice.
+// Can you modify this methode in a way that the code using it is notified of
+// the error in case it happens?
 func ConnectDb() {
 	configuration := utils.GetConfig()
 
