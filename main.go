@@ -1,17 +1,19 @@
 package main
 
 import (
-	"fmt"
-	"github.com/gofiber/fiber/v2"
 	"api/database"
-	"api/utils"
 	"api/routes"
+	"api/utils"
+	"fmt"
+
+	"github.com/gofiber/fiber/v2"
 )
 
-func  main()  {
+func main() {
 
 	database.ConnectDb()
 
+	// utils.GetConfig never fail?
 	configuration := utils.GetConfig()
 	port := configuration.PORT
 
