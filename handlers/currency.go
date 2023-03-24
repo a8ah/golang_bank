@@ -2,14 +2,14 @@ package handlers
 
 import (
 	"api/models"
-	"api/service"
+	"api/services"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func GetAllCurrencies(c *fiber.Ctx) error {
-	currencies := service.GetAllCurrencies()
+	currencies := services.GetAllCurrencies()
 
 	return c.Status(200).JSON(currencies)
 }
@@ -24,7 +24,7 @@ func CreateCurrency(c *fiber.Ctx) error {
 			})
 	}
 
-	result, err := service.CreateCurrency(currency)
+	result, err := services.CreateCurrency(currency)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(
 			fiber.Map{
@@ -38,7 +38,7 @@ func CreateCurrency(c *fiber.Ctx) error {
 func GetCurrency(c *fiber.Ctx) error {
 
 	id := c.Params("id")
-	currency, err := service.GetCurrency(id)
+	currency, err := services.GetCurrency(id)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(
 			fiber.Map{
@@ -61,7 +61,7 @@ func ModifyCurrency(c *fiber.Ctx) error {
 			})
 	}
 
-	currency, err := service.GetCurrency(id)
+	currency, err := services.GetCurrency(id)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(
 			fiber.Map{
@@ -79,7 +79,7 @@ func ModifyCurrency(c *fiber.Ctx) error {
 
 	updates["updated_at"] = time.Now()
 
-	result, err := service.ModifyCurrency(currency, updates)
+	result, err := services.ModifyCurrency(currency, updates)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(
 			fiber.Map{
