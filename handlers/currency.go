@@ -1,26 +1,22 @@
 package handlers
 
 import (
-	"api/database"
 	"api/models"
+	"api/service"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
 )
 
 func GetAllCurrencies(c *fiber.Ctx) error {
-	currencies := []models.Currency{}
-	db := database.DB.Db
-
-	db.Find(&currencies)
+	currencies := service.GetAllCurrencies()
 
 	return c.Status(200).JSON(currencies)
 }
 
 func CreateCurrency(c *fiber.Ctx) error {
 	currency := new(models.Currency)
-	db := database.DB.Db
+
 	if err := c.BodyParser(currency); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(
 			fiber.Map{
@@ -28,24 +24,32 @@ func CreateCurrency(c *fiber.Ctx) error {
 			})
 	}
 
-	db.Create(&currency)
+	result, err := service.CreateCurrency(currency)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(
+			fiber.Map{
+				"message": err.Error(),
+			})
+	}
 
-	return c.Status(200).JSON(currency)
+	return c.Status(200).JSON(result)
 }
 
 func GetCurrency(c *fiber.Ctx) error {
 
 	id := c.Params("id")
-	db := database.DB.Db
-	var currency models.Currency
-
-	db.First(&currency, "uuid = ?", id)
-
+	currency, err := service.GetCurrency(id)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(
+			fiber.Map{
+				"message": err.Error(),
+			})
+	}
 	return c.Status(200).JSON(currency)
 }
 
 func ModifyCurrency(c *fiber.Ctx) error {
-	db := database.DB.Db
+
 	id := c.Params("id")
 
 	// Validating input
@@ -57,18 +61,9 @@ func ModifyCurrency(c *fiber.Ctx) error {
 			})
 	}
 
-	var currency models.Currency
-	result := db.First(&currency, "uuid = ?", id)
-
-	// validar q la consulta retorne datos, de lo contrario retornar un error
-	if err := result.Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return c.Status(fiber.StatusNotFound).JSON(
-				fiber.Map{
-					"message": "No currency with that Id Found",
-				})
-		}
-		return c.Status(fiber.StatusBadGateway).JSON(
+	currency, err := service.GetCurrency(id)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(
 			fiber.Map{
 				"message": err.Error(),
 			})
@@ -84,10 +79,16 @@ func ModifyCurrency(c *fiber.Ctx) error {
 
 	updates["updated_at"] = time.Now()
 
-	db.Model(&currency).Updates(updates)
+	result, err := service.ModifyCurrency(currency, updates)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(
+			fiber.Map{
+				"message": err.Error(),
+			})
+	}
 
 	return c.Status(200).JSON(fiber.Map{
 		"status": "success",
-		"data":   fiber.Map{"currency": currency},
+		"data":   fiber.Map{"currency": result},
 	})
 }
