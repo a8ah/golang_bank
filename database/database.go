@@ -4,7 +4,6 @@ import (
 	"api/utils"
 	"fmt"
 	"log"
-	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -23,8 +22,11 @@ var DB Dbinstance
 // To make an entire app fail from an internal package is not a good practice.
 // Can you modify this methode in a way that the code using it is notified of
 // the error in case it happens?
-func ConnectDb() {
-	configuration := utils.GetConfig()
+func ConnectDb() error {
+	configuration, err := utils.GetConfig()
+	if err != nil {
+		return err
+	}
 
 	dsn := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
@@ -40,11 +42,11 @@ func ConnectDb() {
 	})
 
 	if err != nil {
-		log.Fatal("Failed to connect to daabase. \n", err)
-		os.Exit(2)
+		log.Print("Failed to connect to database. \n", err)
+		return err
 	}
 
-	log.Print("Connected")
+	log.Print("Database Connected")
 	db.Logger = logger.Default.LogMode(logger.Info)
 
 	// log.Println("running migrations")
@@ -56,4 +58,6 @@ func ConnectDb() {
 	DB = Dbinstance{
 		Db: db,
 	}
+
+	return nil
 }

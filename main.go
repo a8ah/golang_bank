@@ -5,25 +5,21 @@ import (
 	"api/routes"
 	"api/utils"
 	"fmt"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
 
-	database.ConnectDb()
-
-	// utils.GetConfig never fail?
-	configuration := utils.GetConfig()
-	port := configuration.PORT
-
-	if port == "" {
-		port = "3000"
+	err := database.ConnectDb()
+	if err != nil {
+		os.Exit(2)
 	}
 
 	app := fiber.New()
 
 	routes.SetUpRouters(app)
 
-	app.Listen(fmt.Sprintf(":%v", port))
+	app.Listen(fmt.Sprintf(":%v", utils.Port()))
 }
